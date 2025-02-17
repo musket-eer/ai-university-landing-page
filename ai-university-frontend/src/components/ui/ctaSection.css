@@ -1,0 +1,78 @@
+/* src/styles/CTASection.css */
+
+/* Futuristic Dark Theme with Neon Accents */
+.cta-section {
+    text-align: center;
+    padding: 2rem;
+    background-color: #0D0D0D; /* Matte Black */
+    border-top: 1px solid #1F1F1F;
+    border-bottom: 1px solid #1F1F1F;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); /* Subtle Neon Glow */
+}
+
+.cta-title {
+    font-size: 2rem;
+    color: #00FFFF; /* Neon Cyan */
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.cta-description {
+    font-size: 1.1rem;
+    color: #B0B0B0; /* Cyber Gray */
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+}
+
+.cta-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Inputs - Sleek and Minimalist */
+.cta-input,
+.cta-select {
+    width: 80%;
+    max-width: 400px;
+    padding: 0.8rem;
+    background: #181A1B; /* Deep Space Gray */
+    border: 1px solid #00FFFF; /* Neon Cyan */
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #EAEAEA; /* Soft White */
+    transition: all 0.3s ease;
+}
+
+.cta-input:focus,
+.cta-select:focus {
+    outline: none;
+    border-color: #8A2BE2; /* Deep Purple */
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+/* Primary Button - Futuristic Glow */
+.button.primary {
+    background-color: #00FFFF; /* Neon Cyan */
+    color: #0D0D0D; /* Dark Mode Contrast */
+    border: none;
+    padding: 0.85rem 1.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+}
+
+.button.primary:hover {
+    background-color: #8A2BE2; /* Deep Purple */
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.8);
+}

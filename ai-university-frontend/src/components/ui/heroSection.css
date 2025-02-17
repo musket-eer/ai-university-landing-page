@@ -1,0 +1,87 @@
+/* src/styles/HeroSection.css */
+
+/* Futuristic Hero Section */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem;
+    background: linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%);
+    color: #EAEAEA;
+    border-bottom: 2px solid rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+/* Centered Content */
+.hero-content {
+    max-width: 800px;
+}
+
+/* Futuristic Tagline */
+.hero-tagline {
+    font-size: 2.8rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #00FFFF, #8A2BE2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Hero Description - Clean & Readable */
+.hero-description {
+    font-size: 1.3rem;
+    color: #B0B0B0;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+/* Button Group */
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Base Button Styles */
+.button {
+    padding: 0.9rem 1.8rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Primary Button - Electric Blue */
+.button.primary {
+    background: linear-gradient(90deg, #00FFFF, #0088FF);
+    color: #0D0D0D;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.button.primary:hover {
+    background: linear-gradient(90deg, #00A2FF, #00FFFF);
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+/* Secondary Button - Cyber Purple */
+.button.secondary {
+    background: linear-gradient(90deg, #8A2BE2, #FF00FF);
+    color: #EAEAEA;
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+.button.secondary:hover {
+    background: linear-gradient(90deg, #9400D3, #FF1493);
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
+}
