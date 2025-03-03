@@ -1,16 +1,16 @@
 import HeroSection from '../components/ui/heroSection';
 import FeaturesSection from '../components/ui/featureSection';
 import CTASection from '../components/ui/ctaSection';
+import Header from '../components/ui/header';
 import './landingPage.css';
 
 function AIUniversity() {
   return (
     <div className="index-page">
+    <Header />
       <HeroSection 
         tagline="Revolutionizing Education with AI-Driven Learning"
-        description={<span className="description-text">Traditional e-learning platforms force learners into rigid categories—visual, auditory, kinesthetic—assuming that learning preferences exist in neat, discrete boxes. But real learning isn’t that simple. Your ability, style, and pace exist on a continuum, shifting with context, subject matter, and even your daily mental state.
-          Our AI-driven platform breaks free from this outdated approach. AI agents continuously observe, analyze, and adapt, learning how you learn with each interaction. Whether you grasp abstract concepts instantly or need hands-on application, whether you thrive on structure or require flexible exploration, the system reshapes itself in real-time—sourcing the right material, adjusting explanations, and pacing lessons to match your evolving needs.
-          With seamless integration of expert tutors, this platform ensures mastery, not just progress bars—giving you the ultimate personalized learning experience that evolves as you do. No rigid courses. No artificial constraints. Just education built around you.
+        description={<span className="description-text">Ditch outdated, rigid learning systems. Most Learned is the first AI-driven e-learning platform that adapts to you. Powered by intelligent AI agents, it designs a fully customized curriculum that evolves with your preferences, mastery, and progress. Start learning smarter, not harder—sign up now and experience education that finally understands you.
           </span>}
         primaryButton={{ text: "Join Now", link: "/signup" }}
         secondaryButton={{ text: "Learn More", link: "/learn-more" }}
