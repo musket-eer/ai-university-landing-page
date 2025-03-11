@@ -1,22 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
-
+import AppRoutes from './routes/AppRoutes'; // Import Routes
 import './index.css';
-import App from './App';
-import AIUniversityLanding from './pages/landingPage';
 import reportWebVitals from './reportWebVitals';
+import { ExaminerProvider } from './components/Examiner/ExaminerContext';
+import { StudentContextProvider } from './components/Student/StudentContext';
+import { ProfessorProvider } from './components/Professor/ProfessorContext';
+import { TAProvider } from './components/TA/TAContext';
+import { ActiveModeProvider } from './contexts/ActiveModeContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Router>
-  <React.StrictMode>
-    <AIUniversityLanding />
-  </React.StrictMode>
-  </Router>
+  <ActiveModeProvider> 
+    <React.StrictMode>
+      <StudentContextProvider>
+        <ProfessorProvider>
+          <ExaminerProvider>
+            <TAProvider>
+              <AppRoutes />
+            </TAProvider>
+          </ExaminerProvider>
+        </ProfessorProvider>
+      </StudentContextProvider>
+    </React.StrictMode>
+    </ActiveModeProvider> 
+
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

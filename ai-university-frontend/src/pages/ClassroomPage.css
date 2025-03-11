@@ -1,0 +1,58 @@
+/* 🔹 Main Container */
+.classroom-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 🔹 Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #2d3e50;
+    color: white;
+    padding: 15px 20px;
+    border-bottom: 2px solid #ccc;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* 🔹 Classroom Grid (Increased Component Size) */
+.classroom-main {
+    display: grid;
+    grid-template-columns: 50% 50%; /* Two equal columns */
+    grid-template-rows: repeat(2, 40vh); /* Each row now takes up 40% of viewport height */
+    gap: 10px; /* Adds spacing between components */
+    width: 100%;
+    height: calc(100vh - 60px); /* Subtract Navbar height */
+    padding-top: 60px; /* ✅ Pushes grid down below navbar */
+}
+
+/* 🔹 Ensure Components Fit Grid */
+.professor-container,
+.ta-container,
+.examiner-container,
+.student-container {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+    height: 100%; /* ✅ Increased size */
+    width: 100%; /* ✅ Prevents shrinking */
+    border: 2px solid #aaa;
+}
+
+/* 🔹 Assign Grid Positions */
+.professor-container { grid-column: 1 / 2; grid-row: 1 / 2; background-color: #f8d7da; }
+.ta-container { grid-column: 2 / 3; grid-row: 1 / 2; background-color: #fff3cd; }
+.examiner-container { grid-column: 1 / 2; grid-row: 2 / 3; background-color: #d1ecf1; }
+.student-container { grid-column: 2 / 3; grid-row: 2 / 3; background-color: white; }

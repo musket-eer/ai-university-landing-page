@@ -1,0 +1,32 @@
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #2d3e50;
+    color: white;
+    padding: 10px 20px;
+    border-bottom: 2px solid #ccc;
+}
+
+/* Navbar Buttons */
+.navbar button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navbar button:hover {
+    background-color: #0056b3;
+}
+
+/* Active Indicator */
+.navbar p {
+    font-size: 16px;
+    font-weight: bold;
+}
