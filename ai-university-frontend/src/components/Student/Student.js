@@ -5,41 +5,60 @@ import Input from '../ui/Input';
 import './Student.css';
 
 const Student = () => {
-  const { activeActivity, addMessage } = useClassroom(); // ✅ Get activeActivity and addMessage
+  const { activeActivity, addMessage } = useClassroom();
   const [message, setMessage] = useState('');
-  const messagesEndRef = useRef(null); // ✅ Ref for auto-scrolling
+  const messagesEndRef = useRef(null);
 
-  // ✅ Automatically scroll to the latest message
+  useEffect(() => {
+    console.log("🔍 Updated Messages in Student:", activeActivity?.messages);
+  }, [activeActivity?.messages]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [activeActivity?.messages]);
+  }, [activeActivity?.messages?.length]);
 
   const sendMessage = async () => {
     if (!message.trim() || !activeActivity) return;
 
-    const messageData = {
+    const studentMessage = {
       sender: "Student",
-      text: message,
+      text: message, // ✅ Ensure correct key is used
       timestamp: new Date().toLocaleTimeString(),
     };
+    addMessage(studentMessage);
+    setMessage('');
 
-    addMessage(messageData); // ✅ Store student message
-
-    setMessage(''); // ✅ Clear input after sending
-
-    // ✅ Handle leader response
     switch (activeActivity.leader) {
       case 'Professor':
-        await ProfessorService.processStudentMessage(activeActivity.id, activeActivity.title, message, addMessage);
+        setTimeout(async () => {
+          const professorResponse = {
+            sender: "Professor",
+            text: "Great question! Let's break this down.", // ✅ Ensure text exists
+            timestamp: new Date().toLocaleTimeString(),
+          };
+          addMessage(professorResponse);
+        }, 1000);
         break;
       case 'Examiner':
-        addMessage({ sender: "Examiner", text: "Your answer has been received.", timestamp: new Date().toLocaleTimeString() });
+        addMessage({
+          sender: "Examiner",
+          text: "Your answer has been received.",
+          timestamp: new Date().toLocaleTimeString(),
+        });
         break;
       case 'TA':
-        addMessage({ sender: "TA", text: "Here’s a hint: Think about previous lessons!", timestamp: new Date().toLocaleTimeString() });
+        addMessage({
+          sender: "TA",
+          text: "Here’s a hint: Think about previous lessons!",
+          timestamp: new Date().toLocaleTimeString(),
+        });
         break;
       case 'Librarian':
-        addMessage({ sender: "Librarian", text: "Let me find the best research materials for you.", timestamp: new Date().toLocaleTimeString() });
+        addMessage({
+          sender: "Librarian",
+          text: "Let me find the best research materials for you.",
+          timestamp: new Date().toLocaleTimeString(),
+        });
         break;
       default:
         console.warn("⚠️ No active leader to respond.");
@@ -48,21 +67,31 @@ const Student = () => {
 
   return (
     <div className="student-container">
-      {/* <h2>Talking to {activeActivity?.leader || "AI"}</h2> */}
+      <h3>Chat with {activeActivity?.leader || "AI"}</h3>
 
-      {/* ✅ Display Message History */}
       <div className="chat-messages">
-        {activeActivity?.messages?.map((msg, index) => (
-          <p key={index} className={msg.sender === "Student" ? "student-msg" : "participant-msg"}>
-            <strong>{msg.sender} ({msg.timestamp}):</strong> {msg.text}
-          </p>
-        ))}
-        <div ref={messagesEndRef} /> {/* ✅ Auto-scroll to latest message */}
+        {activeActivity?.messages?.length > 0 ? (
+          <ul>
+            {activeActivity.messages.map((msg, index) => (
+              <li key={index} className={msg.sender === "Student" ? "student-msg" : "participant-msg"}>
+                <strong>{msg.sender} ({msg.timestamp}):</strong> {msg.text}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No messages yet.</p>
+        )}
+        <div ref={messagesEndRef} />
       </div>
 
-      <Input onSendMessage={sendMessage} />
+      <Input
+        onSendMessage={sendMessage}
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
     </div>
   );
 };
 
 export default Student;
+
