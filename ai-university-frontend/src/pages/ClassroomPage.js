@@ -1,40 +1,33 @@
-import React from 'react';
-import { ActiveModeProvider } from '../contexts/ActiveModeContext';
-import Student from '../components/Student/Student';
-import Professor from '../components/Professor/Professor';
-import TA from '../components/TA/TA';
-import Examiner from '../components/Examiner/Examiner';
-import NavBar from '../components/ui/NavBar';
-import './ClassroomPage.css';
+import React from "react";
+import { ClassroomProvider } from "../components/data/ClassroomContext";
+import Classroom from "../components/data/Classroom"; // Only renders Classroom
+import NavBar from "../components/ui/NavBar";
+import { Container } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./ClassroomPage.css";
+
+// Sample lesson topics for LLM
+const llmText = `
+Introduction to AI
+History of AI
+Machine Learning Basics
+Neural Networks
+Deep Learning
+Natural Language Processing
+Computer Vision
+Ethics in AI
+Future of AI
+AI in Business
+`;
 
 const ClassroomPage = () => {
-    console.log(Examiner); // ✅ Should log a function, not undefined!
-
   return (
-    <ActiveModeProvider>
-      <div className="classroom-container">
-        {/* Navbar for selecting communication target */}
+    <ClassroomProvider llmText={llmText}>
+      <Container fluid className="classroom-container">
         <NavBar />
-
-        <div className="classroom-main">
-          <div className="professor-container">
-            <Professor />
-          </div>
-
-          <div className="ta-container">
-            <TA />
-          </div>
-
-          <div className="examiner-container">
-            <Examiner />
-          </div>
-
-          <div className="student-container">
-            <Student />
-          </div>
-        </div>
-      </div>
-    </ActiveModeProvider>
+        <Classroom />
+      </Container>
+    </ClassroomProvider>
   );
 };
 

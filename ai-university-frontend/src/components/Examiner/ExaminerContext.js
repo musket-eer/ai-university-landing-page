@@ -3,24 +3,36 @@ import React, { createContext, useReducer } from 'react';
 // ✅ Initial State
 const initialState = {
   message: 'Examiner is ready to conduct the exam!',
+  exam: {
+    examId: 'EXAM_AI_101',
+    title: 'Artificial Intelligence Basics',
+    duration: 30 * 60, // 30 minutes in seconds
+    isExamActive: false, // ✅ Exam starts only when activated
+    isExamSubmitted: false, // ✅ Lock exam after submission
+  },
   questions: [
-    { question_id: 1, question_text: 'What is 2 + 2?' },
-    { question_id: 2, question_text: 'Who discovered gravity?' },
-    { question_id: 3, question_text: 'What is the capital of France?' },
-    { question_id: 4, question_text: 'Explain Newton’s First Law of Motion.' },
-    { question_id: 5, question_text: 'What is the square root of 64?' }
+    { question_id: 1, question_text: 'What is 2 + 2?', field_type: 'text' },
+    { question_id: 2, question_text: 'Who discovered gravity?', field_type: 'text' },
+    { question_id: 3, question_text: 'What is the capital of France?', field_type: 'text' },
+    { question_id: 4, question_text: 'Explain Newton’s First Law of Motion.', field_type: 'text' },
+    { question_id: 5, question_text: 'What is the square root of 64?', field_type: 'text' }
   ],
   currentQuestionIndex: 0, // ✅ Track the active question
   studentAnswers: {}, // ✅ Store student responses per question
-  isExamSubmitted: false, // ✅ Track exam submission status
   viewResponsesMode: false // ✅ Toggle between questions & dialogue view
 };
 
 // ✅ Reducer Function
 const examinerReducer = (state, action) => {
   switch (action.type) {
+    case 'START_EXAM':
+      return {
+        ...state,
+        exam: { ...state.exam, isExamActive: true } // ✅ Start the exam
+      };
+
     case 'SUBMIT_ANSWER': {
-      if (state.isExamSubmitted) return state; // ✅ Prevent edits after submission
+      if (state.exam.isExamSubmitted) return state; // ✅ Prevent edits after submission
 
       const { answer } = action.payload;
       const question_id = state.questions[state.currentQuestionIndex].question_id;
@@ -37,7 +49,7 @@ const examinerReducer = (state, action) => {
     case 'SUBMIT_EXAM': {
       return {
         ...state,
-        isExamSubmitted: true // ✅ Lock exam and prevent further edits
+        exam: { ...state.exam, isExamActive: false, isExamSubmitted: true } // ✅ Lock exam after submission
       };
     }
 

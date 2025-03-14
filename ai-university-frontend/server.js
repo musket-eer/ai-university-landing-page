@@ -14,96 +14,76 @@ const openai = new OpenAI({
 
 // ✅ 1. Generate Lesson Plan with Metadata & Ordered Topics
 app.post("/generate-lesson", async (req, res) => {
-  console.log(req.body.messages);
   try {
-    // const { topic, duration } = req.body;
     const duration = "40";
-    const topic = "NewTons Law";
-    
+    const topic = "Newton's Law";
+    const messages = req.body.messages || [];
+
     if (!topic || typeof topic !== "string") {
-      return res.status(400).json({ error: "Topic is required" });
+      return res.status(400).json({ error: "Topic is required." });
     }
 
-    // Request AI to generate structured lesson plan
-    const messages = [
-      {
-        role: "system",
-        content: "You are a professor. Create a structured lesson with metadata and 10 ordered topics."
-      },
-      {
-        role: "user",
-        content: `Create a structured ${duration}-minute lesson on "${topic}". 
-        - Provide **lessonMetadata** (title, objectives, duration).
-        - List **10 main ideas** as topics, arranged from basic to advanced.
-        - Each topic should have a short **explanation**.
-        - Ensure that topics flow logically from simple to complex.`,
-      }
-    ];
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return res.status(400).json({ error: "Messages array is required and cannot be empty." });
+    }
 
     const completion = await openai.chat.completions.create({
       model: "deepseek-chat",
       messages,
     });
 
-    const lessonText = completion.choices[0]?.message?.content || "No lesson generated.";
-    const structuredLesson = parseLessonText(lessonText);
-    console.log(structuredLesson);
+    if (!completion || !completion.choices || completion.choices.length === 0) {
+      console.error("❌ DeepSeek API returned an invalid response:", completion);
+      return res.status(500).json({ error: "Invalid response from DeepSeek API." });
+    }
 
-    
+    const lessonText = completion.choices[0]?.message?.content;
+    if (!lessonText) {
+      return res.status(500).json({ error: "DeepSeek API returned an empty response." });
+    }
+
+    let structuredLesson;
+    try {
+      structuredLesson = parseLessonText(lessonText);
+      console.log(structuredLesson);
+    } catch (parseError) {
+      console.error("❌ Error parsing lesson text:", parseError);
+      return res.status(500).json({ error: "Failed to parse lesson structure." });
+    }
     res.json({ lessonPlan: structuredLesson });
+
   } catch (error) {
     console.error("❌ Error generating lesson:", error.response?.data || error.message);
     res.status(500).json({ error: "An error occurred while generating the lesson." });
   }
 });
 
-// ✅ 2. Interactive Q&A (Student asks about the active topic)
-app.post("/ask-professor", async (req, res) => {
-  try {
-    // const { activeTopic, studentQuestion } = req.body;
-    const activeTopic = req.body.activeTopic;
-    const studentQuestion = req.body.studentMessage;
-    console.log(studentQuestion);
-
-    if (!activeTopic || !studentQuestion) {
-      return res.status(400).json({ error: "Active topic and student question are required." });
-    }
-
-    // Request AI to provide deeper explanations about the active topic
-    const messages = [
-      { role: "system", content: "You are a professor answering student questions." },
-      { role: "user", content: `The student is currently learning about: "${activeTopic}".\n\nStudent Question: ${studentQuestion}` }
-    ];
-
-    const completion = await openai.chat.completions.create({
-      model: "deepseek-chat",
-      messages,
-    });
-
-    const professorResponse = completion.choices[0]?.message?.content || "I don't know the answer.";
-
-    res.json({ response: professorResponse });
-  } catch (error) {
-    console.error("❌ Error in Q&A:", error.response?.data || error.message);
-    res.status(500).json({ error: "An error occurred during the Q&A session." });
-  }
-});
 
 // ✅ Function to parse AI response into structured lesson format
 function parseLessonText(text) {
-  const sections = text.split("\n\n");
+  const sections = text.split("\n");
+
+  console.log("Sections: ", sections)
   return {
     lessonMetadata: {
       title: sections[0] || "Untitled Lesson",
-      objectives: sections[1] || "No objectives provided.",
-      duration: "40 minutes"
+      objective_1: sections[1] || "No objectives provided.",
+      objective_2: sections[2] || "No objectives provided.",
+      objective_3: sections[3] || "No objectives provided.",
+      objective_4: sections[4] || "No objectives provided.",
+      duration: sections[5] || "Beginner",
+      difficulty: sections[6] || "40 minutes"
     },
-    topics: sections.slice(2).map((section, index) => ({
-      id: index,
-      title: section.split(":")[0]?.trim() || "Untitled Topic",
-      content: section.split(":")[1]?.trim() || "No content available.",
-      messages: []
-    }))
+    activities: sections.slice(8).map((section, index) => {
+      const parts = section.split("|").map(part => part.trim()); // ✅ Split & Trim
+
+      return {
+        id: parts[0] || `activity-${index}`, // ✅ Extract ID or use fallback
+        leader: parts[1] || "Unknown Leader", // ✅ Extract Leader
+        title: parts[2] || "Untitled Topic", // ✅ Extract Title
+        messages: [] // ✅ Initialize an empty conversation array
+      };
+    })
   };
 }
 

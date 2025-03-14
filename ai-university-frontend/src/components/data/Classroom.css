@@ -1,0 +1,51 @@
+.classroom {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .classroom-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .active-component-card,
+  .chat-card {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .active-component-card:hover,
+  .chat-card:hover {
+    transform: scale(1.02);
+  }
+  
+  .component-title,
+  .chat-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .component-content {
+    font-size: 18px;
+    color: #555;
+    margin-top: 10px;
+  }
+  
+  .navigation-controls {
+    margin-top: 20px;
+  }
+  
+  .nav-button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  

@@ -1,25 +1,25 @@
-import React, { useContext } from 'react';
-import { ActiveModeContext } from '../../contexts/ActiveModeContext';
-import './NavBar.css';
+import React from "react";
+import { Link } from "react-router-dom"; // For navigation
+import "./NavBar.css";
 
 const Navbar = () => {
-  const { state, dispatch } = useContext(ActiveModeContext);
-
   return (
     <div className="navbar">
-      <p><strong>Talking to:</strong> {state.activeMode.toUpperCase()}</p>
-      
-      <button onClick={() => dispatch({ type: 'SET_ACTIVE_MODE', payload: 'professor' })}>
-        Talk to Professor
-      </button>
-      
-      <button onClick={() => dispatch({ type: 'SET_ACTIVE_MODE', payload: 'ta' })}>
-        Talk to TA
-      </button>
-      
-      <button onClick={() => dispatch({ type: 'SET_ACTIVE_MODE', payload: 'examiner' })}>
-        Talk to Examiner
-      </button>
+      <h2>Most Learned</h2>
+      <div className="nav-buttons">
+        <Link to="/dashboard">
+          <button>Dashboard</button>
+        </Link>
+        <Link to="/profile">
+          <button>Profile</button>
+        </Link>
+        <Link to="/settings">
+          <button>Settings</button>
+        </Link>
+        <Link to="/logout">
+          <button>Logout</button>
+        </Link>
+      </div>
     </div>
   );
 };

@@ -1,80 +1,34 @@
-import React, { useContext } from 'react';
-import { ExaminerContext } from './ExaminerContext';
-import './Examiner.css';
+import React, { useState, useEffect } from "react";
+import { useClassroom } from "../data/ClassroomContext";
+import Exam from "../data/Exam";
 
 const Examiner = () => {
-  const { state, dispatch } = useContext(ExaminerContext);
-  const currentQuestion = state.questions[state.currentQuestionIndex];
+  const { activeActivity } = useClassroom();
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  // ✅ Ensure component only renders when `activeActivity.leader === "Examiner"`
+  if (!activeActivity || activeActivity.leader !== "Examiner") {
+    return null;
+  }
+
+  const questions = activeActivity.questions || [];
+
+  // ✅ Update the current question index and notify TA
+  const handleQuestionChange = (newIndex) => {
+    setCurrentQuestionIndex(newIndex);
+  };
 
   return (
-    <div className="examiner-container">
-      <h2>Examiner</h2>
-
-      {/* ✅ Toggle View: Questions vs. Responses */}
-      {!state.viewResponsesMode ? (
-        <>
-          {/* Display Current Question */}
-          <div className="exam-question">
-            <h3>Current Question</h3>
-            {currentQuestion ? (
-              <p>{currentQuestion.question_text}</p>
-            ) : (
-              <p>Exam is complete!</p>
-            )}
-          </div>
-
-          {/* Show Student's Answer (Updated Immediately) */}
-          <div className="exam-answer">
-            <h3>Student's Answer</h3>
-            <p>{state.studentAnswers[currentQuestion?.question_id] || "No answer yet."}</p>
-          </div>
-
-          {/* Navigation & Submission Buttons */}
-          <div className="exam-navigation">
-            <button
-              onClick={() => dispatch({ type: 'PREVIOUS_QUESTION' })}
-              disabled={state.currentQuestionIndex === 0}
-            >
-              Previous
-            </button>
-
-            <button
-              onClick={() => dispatch({ type: 'NEXT_QUESTION' })}
-              disabled={state.currentQuestionIndex >= state.questions.length - 1}
-            >
-              Next
-            </button>
-
-            {!state.isExamSubmitted && (
-              <button onClick={() => dispatch({ type: 'SUBMIT_EXAM' })}>
-                Submit Exam
-              </button>
-            )}
-
-            <button onClick={() => dispatch({ type: 'TOGGLE_VIEW_RESPONSES' })}>
-              View Responses
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          {/* ✅ View All Responses as a Dialogue */}
-          <h3>Examiner-Student Dialogue</h3>
-          <div className="conversation-log">
-            {state.questions.map((question) => (
-              <div key={question.question_id} className="conversation-entry">
-                <p><strong>Examiner:</strong> {question.question_text}</p>
-                <p><strong>Student:</strong> {state.studentAnswers[question.question_id] || "No answer provided."}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Exit View Mode */}
-          <button onClick={() => dispatch({ type: 'TOGGLE_VIEW_RESPONSES' })}>
-            Back to Exam Mode
-          </button>
-        </>
-      )}
+    <div className="examiner">
+      <h2>{activeActivity.title || "Exam Session"}</h2>
+      
+      {/* ✅ The Exam component is fully inside Examiner */}
+      <Exam
+        examTitle={activeActivity.content}
+        questions={questions}
+        currentQuestionIndex={currentQuestionIndex}
+        onQuestionChange={handleQuestionChange} // ✅ Notify Examiner when question changes
+      />
     </div>
   );
 };

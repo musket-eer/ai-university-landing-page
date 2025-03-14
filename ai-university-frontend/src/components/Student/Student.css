@@ -1,28 +1,23 @@
 /* Student Container */
 .student-container {
-    position: relative;
     bottom: 0;
     right: 0;
-    width: 50%;
-    height: 40%;
-    background-color: white;
+    height: 100%;
+    background-color: blue;
     border-radius: 8px;
-    border: 2px solid #aaa; /* Add border */
+    border: 2px solid #aaa;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     padding: 15px;
-    margin: 10px;
-    overflow-y: auto;
+    overflow: hidden; /* Prevents unwanted scrolling */
 }
 
 /* Header Styling */
 .student-container h2 {
-    font-size: 16px;
+    font-size: 18px;
     color: #333;
-    margin-bottom: 10px;
-    text-align: left;
-    width: 100%;
+    text-align: center;
     border-bottom: 1px solid #888;
     padding-bottom: 5px;
 }
@@ -35,33 +30,10 @@
     padding: 10px;
     background-color: #ffffff;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 5px solid #ccc;
 }
 
-/* Input Area */
-textarea {
-    width: 100%;
-    min-height: 50px;
-    border: 1px solid #ccc;
-    outline: none;
-    font-size: 14px;
-    padding: 8px;
-    resize: none;
-    margin-top: 5px;
-}
 
-/* Button Styling */
-button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 8px 10px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-top: 5px;
-    width: 100%;
-}
-
-button:hover {
+.send-button:hover {
     background-color: #0056b3;
 }

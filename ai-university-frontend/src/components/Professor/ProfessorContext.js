@@ -1,54 +1,44 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useReducer, useContext } from "react";
 import { ProfessorService } from "./ProfessorService"; // ✅ Import ProfessorService
+import { ClassroomContext } from "../data/ClassroomContext"; // ✅ Access active activity from ClassroomContext
 
 const ProfessorContext = createContext();
 
 const initialState = {
-  lessonMetadata: null,
-  topics: [],
-  activeTopicIndex: 0
+  chatHistory: [] // ✅ Store only the chat history (not lesson plan)
 };
 
 const professorReducer = (state, action) => {
   switch (action.type) {
-    case "SET_LESSON_PLAN":
-      return {
-        ...state,
-        lessonMetadata: action.payload.lessonMetadata,
-        topics: action.payload.topics.map(topic => ({
-          ...topic,
-          conversation: topic.conversation || [] // ✅ Ensure conversation array exists
-        })),
-        activeTopicIndex: 0
-      };
-
-    case "SET_ACTIVE_TOPIC":
-      return {
-        ...state,
-        activeTopicIndex: action.payload
-      };
-
     case "ADD_MESSAGE":
-      const { topicId, message, dispatch } = action.payload; // ✅ Extract dispatch
+      const { message, dispatch, activeActivity } = action.payload;
 
-      // ✅ Add the message to the correct topic's conversation
-      const updatedTopics = state.topics.map(topic =>
-        topic.id === topicId
-          ? { ...topic, conversation: [...topic.conversation, message] }
-          : topic
-      );
+      // ✅ Update chat history
+      const updatedChatHistory = [...state.chatHistory, message];
 
-      // ✅ Trigger professor response if the message is from the student
-      if (message.sender === "student") {
-        const activeTopic = updatedTopics.find(topic => topic.id === topicId);
-        if (activeTopic) {
-          ProfessorService.processStudentMessage(topicId, activeTopic.title, message.text, dispatch);
-        }
+      // ✅ Only process student messages if activeActivity is available
+      if (message.sender === "student" && activeActivity) {
+        console.log("📩 Processing student message for:", activeActivity.title);
+
+        ProfessorService.processStudentMessage(
+          activeActivity.id,  // ✅ Active topic ID
+          activeActivity.title,  // ✅ Active topic title
+          message.text,  // ✅ Student's message text
+          dispatch
+        );
+      } else if (message.sender === "student") {
+        console.warn("⚠️ Skipping AI response: Active activity is not ready yet.");
       }
 
       return {
         ...state,
-        topics: updatedTopics
+        chatHistory: updatedChatHistory
+      };
+
+    case "CLEAR_CHAT_HISTORY":
+      return {
+        ...state,
+        chatHistory: []
       };
 
     default:
@@ -56,14 +46,20 @@ const professorReducer = (state, action) => {
   }
 };
 
+// ✅ Professor Context Provider
 export const ProfessorProvider = ({ children }) => {
   const [state, dispatch] = useReducer(professorReducer, initialState);
+  const { activeActivity } = useContext(ClassroomContext); // ✅ Get active activity from ClassroomContext
 
   return (
-    <ProfessorContext.Provider value={{ state, dispatch }}>
+    <ProfessorContext.Provider value={{ state, dispatch, activeActivity }}>
       {children}
     </ProfessorContext.Provider>
   );
 };
 
+// ✅ Export ProfessorContext and Custom Hook
 export { ProfessorContext };
+
+// ✅ Custom Hook to Use ProfessorContext
+export const useProfessor = () => useContext(ProfessorContext);
