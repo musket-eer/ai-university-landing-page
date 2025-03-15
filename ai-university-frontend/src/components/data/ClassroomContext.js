@@ -7,7 +7,8 @@ const initialState = {
   activities: [], // Stores the sequence of activities in the lesson
   activeActivityIndex: 0, // Tracks the current active activity index
   activeActivity: null, // Explicitly store the active activity
-  studentProfile: { level: "Intermediate", learningStyle: "Visual" }, // Example student metadata
+//   TODO: - Here we also need store data from registrar, i.e active module, and student profile
+  studentProfile: { level: "Intermediate", learningStyle: "Visual" }, 
   lessonMetadata: null, // Stores lesson objectives, duration, etc.
 };
 
@@ -74,12 +75,14 @@ export const ClassroomProvider = ({ children }) => {
 
   // ✅ Function to fetch and store the lesson plan
   const generateLessonPlan = async () => {
+
+    // TOD:- Acquire this from the active module data passed by the registrar
     const topic = "Artificial Intelligence Basics";
     const duration = "60 minutes";
     const studentProfile = state.studentProfile;
-    const topicInfo = "Introduction to AI concepts, history, and applications.";
 
-    console.log("📚 Fetching lesson plan from ProfessorService...");
+    // TODO:- We would not need to acquire this from student metadata as it will be generated from lesson plan
+    const topicInfo = "Introduction to AI concepts, history, and applications.";
 
     // ✅ Fetch structured lesson data directly from ProfessorService
     const lessonPlan = await ProfessorService.generateLessonPlan(topic, duration, studentProfile, topicInfo, dispatch);

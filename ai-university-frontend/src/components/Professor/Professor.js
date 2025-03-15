@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useClassroom } from "../data/ClassroomContext";
+import { ProfessorService } from "./ProfessorService";
 
 const Professor = () => {
   const { activeActivity, addMessage } = useClassroom();
@@ -17,6 +18,9 @@ const Professor = () => {
   ];
 
   const sendResponse = () => {
+    // TODO: - Plug in here a call to ProfessorService
+    // TODO:- Here we now need to ensure information passed here is acquire from the Classroom. 
+    // const response = ProfessorService.processStudentMessage(module_info, student_info, student_message)
     const randomResponse = responses[Math.floor(Math.random() * responses.length)];
 
     const professorMessage = {
@@ -47,7 +51,10 @@ const Professor = () => {
   return (
     <div className={`professor ${isActive ? "active" : "inactive"}`}>
       <h3>Professor</h3>
-      <p>Teaching: {activeActivity.content}</p>
+      {/* TODO:- here we need to render the chalkboard for the professor, which the professor fills from
+      information from the generateNotes call */}
+      <p>Teaching: {activeActivity.content}</p> 
+      
     </div>
   );
 };

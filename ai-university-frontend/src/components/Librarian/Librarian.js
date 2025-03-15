@@ -1,33 +1,53 @@
-import React, { useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useEffect, useRef, useCallback, useMemo, useState } from "react";
 import { useClassroom } from "../data/ClassroomContext";
+import Resource from "../data/Resource"; // ✅ Import the Resource component
 
 const Librarian = () => {
   const { activeActivity, addMessage } = useClassroom();
   const prevMessageCount = useRef(activeActivity?.messages?.length || 0);
+  const [resources, setResources] = useState([]); // ✅ Store learning resources
+  const [loading, setLoading] = useState(false); // ✅ Loading state for fetching
 
-  // ✅ Memoize responses so they don't cause re-renders
-  const responses = useMemo(() => [
-    "Let me find the best research materials for you.",
-    "I recommend checking our latest journal articles.",
-    "This book might help with your topic.",
-    "You can find more resources in the digital library.",
-    "Would you like references for this subject?"
+  // ✅ Mock AI-generated resources
+  const mockResources = useMemo(() => [
+    { title: "Intro to AI", mediaLink: "https://www.youtube.com/embed/aircAruvnKk" },
+    { title: "Machine Learning Guide", mediaLink: "https://example.com/ml-guide.pdf" },
+    { title: "Deep Learning Article", mediaLink: "https://example.com/deep-learning" }
   ], []);
 
-  // ✅ Use useCallback to prevent unnecessary re-renders
+  // ✅ Simulate AI Response with Mock Resources
+  const generateMockResources = useCallback(() => {
+    console.log("🔄 Generating mock resources..."); // Debugging
+    setLoading(true);
+    setTimeout(() => {
+      console.log("✅ Mock resources set:", mockResources); // Debugging
+ 
+      setResources(mockResources); // ✅ Use the mock data
+      setLoading(false);
+    }, 1000);
+  }, [mockResources]);
+
+  // ✅ Automatically trigger resource loading on mount
+  useEffect(() => {
+    generateMockResources();
+  }, [generateMockResources]);
+
+  // ✅ AI-like auto-response (mocked)
   const sendResponse = useCallback(() => {
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+    const randomResponse = "Here are some useful resources for you!";
     const librarianMessage = {
       sender: "Librarian",
       text: randomResponse,
       timestamp: new Date().toLocaleTimeString(),
     };
     addMessage(librarianMessage);
-  }, [addMessage, responses]); // ✅ Now includes `responses`
+  }, [addMessage]);
 
   // ✅ Listen for new student messages and respond
   useEffect(() => {
     if (!activeActivity || activeActivity.leader !== "Librarian") return;
+
+    console.log("Active Activity:", activeActivity); // ✅ Debugging
 
     const currentMessageCount = activeActivity?.messages?.length || 0;
 
@@ -37,12 +57,13 @@ const Librarian = () => {
       if (lastMessage && lastMessage.sender !== "Librarian") {
         setTimeout(() => {
           sendResponse();
+          generateMockResources();
         }, 1000);
       }
     }
 
     prevMessageCount.current = currentMessageCount;
-  }, [activeActivity, sendResponse]); // ✅ Now completely correct!
+  }, [activeActivity, sendResponse, generateMockResources]);
 
   // ✅ Ensure hooks are always called before returning
   if (!activeActivity || activeActivity.leader !== "Librarian") {
@@ -52,19 +73,37 @@ const Librarian = () => {
   return (
     <div className="librarian">
       <h3>Librarian Assistance</h3>
-
-      {/* ✅ Display reading material if available */}
-      {activeActivity.content ? (
-        <>
-          <p><strong>Reading Material:</strong></p>
-          <p>{activeActivity.content}</p>
-          <button onClick={() => alert("Opening reading material...")}>Open Material</button>
-        </>
-      ) : (
-        <p>No reading material available.</p>
-      )}
+  
+      {/* ✅ AI-generated Learning Materials */}
+      <div className="learning-resources">
+        <h4>Recommended Learning Resources</h4>
+  
+        {loading ? (
+          <p>Loading materials...</p>
+        ) : resources.length > 0 ? (
+          <ul>
+            {resources.map((res, index) => {
+              console.log("🔍 Rendering Resource:", res); // Debugging output
+              
+              // Ensure `res` has expected properties
+              if (!res.title || !res.mediaLink) {
+                console.error("❌ Invalid Resource Object:", res);
+                return null; // Skip invalid resources
+              }
+  
+              return (
+                <li key={index}>
+                  <Resource title={res.title} mediaLink={res.mediaLink} />
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p>No resources available yet.</p>
+        )}
+      </div>
     </div>
   );
-};
+}  
 
 export default Librarian;

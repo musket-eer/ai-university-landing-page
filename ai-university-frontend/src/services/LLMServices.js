@@ -1,55 +1,71 @@
-// Import specific services instead of making redundant API calls
+// ✅ Import necessary services
 import { ProfessorService } from "../components/Professor/ProfessorService";
-// import { TAService } from "../components/TA/TAService";
+import { ExaminerService } from "../components/Examiner/ExaminerService";
+import { LibrarianService } from "../components/Librarian/LibrarianService";
 import { useClassroom } from "../components/data/ClassroomContext";
-// import { LibrarianService } from "./LibrarianService";
-// import { ExaminerService } from "./ExaminerService";
 
-// ✅ Fetch Professor's AI Response
-export const getProfessorResponse = async (activeActivity, dispatch) => {
-  // ✅ Extract required details from activeActivity
+/**
+ * ✅ Fetches AI response based on the current activity leader
+ */
+export const getAIResponse = async (activeActivity, dispatch) => {
   if (!activeActivity) {
     console.error("⚠️ No active activity found.");
     return "I’m sorry, I couldn’t process your question.";
   }
 
-  const { activeTopicId, activeTitle, studentMessage } = activeActivity;
+  const { id: activityId, leader, title: activeTitle, studentMessage } = activeActivity;
 
-  if (!activeTopicId || !activeTitle || !studentMessage?.trim()) {
+  if (!activityId || !activeTitle || !studentMessage?.trim()) {
     console.error("⚠️ Missing required data in activeActivity:", {
-      activeTopicId,
+      activityId,
       activeTitle,
       studentMessage,
     });
     return "I’m sorry, I couldn’t determine the topic.";
   }
 
-  console.log("📌 Using Active Activity Data:", { activeTopicId, activeTitle });
+  console.log("📌 Active Activity Data:", { activityId, activeTitle, leader });
 
-  // ✅ Pass extracted data into the Professor service
-  return ProfessorService.processStudentMessage(activeTopicId, activeTitle, studentMessage, dispatch);
+  switch (leader) {
+    case "Professor":
+      return ProfessorService.processStudentMessage(activityId, activeTitle, studentMessage, dispatch);
+
+    case "Examiner":
+      return ExaminerService.assistStudent(studentMessage, activeTitle);
+
+    case "Librarian":
+      return LibrarianService.fetchResourceRecommendation(activeTitle, studentMessage);
+
+    default:
+      console.warn("⚠️ No valid leader for AI response.");
+      return "I’m not sure how to help with that.";
+  }
 };
 
-// ✅ Fetch TA's AI Response
-// export const getTAResponse = async (studentMessage, dispatch) => {
-//   return TAService.processStudentMessage(studentMessage, dispatch);
-// };
-
-// // ✅ Fetch Librarian's AI Response
-// export const getLibrarianResponse = async (studentMessage, dispatch) => {
-//   return LibrarianService.processStudentMessage(studentMessage, dispatch);
-// };
-
-// // ✅ Fetch Examiner's AI Response
-// export const getExaminerResponse = async (studentMessage, dispatch) => {
-//   return ExaminerService.processStudentMessage(studentMessage, dispatch);
-// };
-
-
-export const generateProfessorLesson = async (lessonParams) => {
-  return ProfessorService.generateLessonPlan(lessonParams);
+/**
+ * ✅ Generates lesson materials based on the active professor's settings.
+ */
+export const generateProfessorLesson = async (lessonMetadata, studentProfile, dispatch) => {
+  return ProfessorService.generateLessonPlan(lessonMetadata, studentProfile, dispatch);
 };
 
-// export const generateTALesson = async (lessonParams) => {
-//   return TAService.generateLesson(lessonParams);
-// };
+/**
+ * ✅ Generates an exam based on the lesson and student data.
+ */
+export const generateExam = async (lessonMetadata, studentProfile) => {
+  return ExaminerService.generateExam(lessonMetadata, studentProfile);
+};
+
+/**
+ * ✅ Grades the submitted student exam.
+ */
+export const gradeExam = async (studentAnswers, examQuestions) => {
+  return ExaminerService.gradeExam(studentAnswers, examQuestions);
+};
+
+/**
+ * ✅ Fetches personalized study resources from the librarian.
+ */
+export const fetchLibrarianResources = async (lessonMetadata, studentProfile) => {
+  return LibrarianService.generateLearningResources(lessonMetadata, studentProfile);
+};

@@ -12,6 +12,7 @@ const loadPrompt = async (fileName) => {
 };
 
 export const ProfessorService = {
+  // Currently, this handles lesson plan generation but we need to remember to migrate it to classroom
   async generateLessonPlan(topic, duration, studentProfile, topicInfo, dispatch) {
     const prompt = await loadPrompt("lessonSequencePrompt.txt");
     if (!prompt) {

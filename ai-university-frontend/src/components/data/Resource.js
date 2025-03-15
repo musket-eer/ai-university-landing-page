@@ -1,6 +1,11 @@
 import React from "react";
 
 const Resource = ({ title, mediaLink }) => {
+  if (!mediaLink) {
+    console.error("❌ Missing mediaLink for resource:", title);
+    return null;
+  }
+
   const isPDF = mediaLink.endsWith(".pdf");
 
   return (
